@@ -8,23 +8,12 @@
     "modules-center": ["clock"],
     "modules-right": ["wireplumber", "battery", "hyprland/language", "idle_inhibitor", "network", "bluetooth", "tray"],
 
-    "hyprland/workspaces": {
-        "format": "<span size='larger'>{icon}</span>",
-        "on-click": "activate",
-        "format-icons": {
-            "active": "\uf444",
-            "default": "\uf4c3"
-        },
-        "icon-size": 10,
-        "sort-by-number": true,
-        "persistent-workspaces": {
-            "1": [],
-            "2": [],
-            "3": [],
-            "4": [],
-            "5": [],
-        }
-    },
+"hyprland/workspaces": {
+    "format": "{id}",
+    "format-active": "{id}",
+    "on-click": "activate",
+    "sort-by-number": true
+},
 
     "clock": {
         "format": "{:%d.%m.%Y | %H:%M}"
