@@ -37,3 +37,24 @@
 #tray {
     padding-right: 1em 
 }
+
+#workspaces button {
+    min-width: 26px;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    background: transparent;
+    color: @foreground;
+}
+
+#workspaces button label {
+    padding: 0;
+    margin: 0;
+}
+
+#workspaces button.focused,
+#workspaces button.active {
+    background-color: #bababa;
+    color: #000000;
+    border-radius: 4px;
+}
