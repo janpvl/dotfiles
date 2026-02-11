@@ -3,5 +3,8 @@
 # Control + Shift + comma on other platforms). Not all config options can be
 
 font-family = JetBrainsMono Nerd Font
+font-feature = -dlig
+font-feature = -liga
+font-feature = -calt
 font-size = 14
 theme = Gruvbox Dark
