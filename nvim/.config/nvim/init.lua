@@ -17,6 +17,9 @@ vim.o.mouse = "a"
 -- Don't show the mode, since it's already in the status line
 vim.o.showmode = false
 
+-- disable swapfiles
+vim.opt.swapfile = false
+
 -- Sync clipboard between OS and Neovim.
 --  Schedule the setting after `UiEnter` because it can increase startup-time.
 --  Remove this option if you want your OS clipboard to remain independent.
@@ -75,6 +78,8 @@ vim.o.scrolloff = 10
 -- instead raise a dialog asking if you wish to save the current file(s)
 -- See `:help 'confirm'`
 vim.o.confirm = true
+
+vim.opt.hidden = true
 
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
