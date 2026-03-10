@@ -8,10 +8,16 @@ return {
 	config = function()
 		require("flutter-tools").setup({})
 
-		local keymap = vim.keymap.set
+		vim.keymap.set("n", "<leader>fR", ":FlutterRun<CR>")
+		vim.keymap.set("n", "<leader>fq", ":FlutterQuit<CR>")
+		vim.keymap.set("n", "<leader>fr", ":FlutterRestart<CR>")
+		vim.keymap.set("n", "<leader>ff", ":FlutterLogToggle<CR>")
+		vim.keymap.set("n", "<leader>fc", ":FlutterLogClear<CR>")
 
-		keymap("n", "<leader>ar", ":FlutterRestart<CR>")
-		keymap("n", "<leader>all", ":FlutterLogToggle<CR>")
-		keymap("n", "<leader>alc", ":FlutterLogClear<CR>")
+		-- which-key group
+		local wk = require("which-key")
+		wk.add({
+			{ "<leader>f", group = "Flutter", icon = "" },
+		})
 	end,
 }
