@@ -66,7 +66,6 @@ vim.o.inccommand = "split"
 
 vim.opt.tabstop = 2
 vim.opt.shiftwidth = 2
-vim.opt.showtabline = 2
 
 -- Show which line your cursor is on
 vim.o.cursorline = true
