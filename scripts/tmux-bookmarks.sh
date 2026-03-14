@@ -10,6 +10,7 @@ declare -A BOOKMARKS=(
   ["StudyApp"]="$HOME/dev/StudyApp/"
   ["dev/"]="$HOME/dev/"
   ["chess"]="$HOME/dev/chess-raylib/"
+  ["dotfiles"]="$HOME/dotfiles/"
 )
 
 # ===== Helpers =====
