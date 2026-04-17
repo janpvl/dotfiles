@@ -11,6 +11,7 @@ declare -A BOOKMARKS=(
   ["dev/"]="$HOME/dev/"
   ["chess"]="$HOME/dev/chess-raylib/"
   ["dotfiles"]="$HOME/dotfiles/"
+  ["Books"]="$HOME/Books/"
 )
 
 # ===== Helpers =====

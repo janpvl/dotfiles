@@ -696,6 +696,7 @@ require("lazy").setup({
 			local parsers = {
 				"bash",
 				"c",
+				"cpp",
 				"diff",
 				"html",
 				"lua",
