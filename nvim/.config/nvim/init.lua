@@ -422,7 +422,9 @@ require("lazy").setup({
 			---@type table<string, vim.lsp.Config>
 			local servers = {
 				clangd = {},
-				-- gopls = {},
+				gopls = {
+					autostart = true,
+				},
 				pyright = {},
 				-- rust_analyzer = {},
 				--
@@ -432,7 +434,7 @@ require("lazy").setup({
 				-- But for many setups, the LSP (`ts_ls`) will work just fine
 				-- ts_ls = {},
 
-				stylua = {}, -- Used to format Lua code
+				-- stylua = {}, -- Used to format Lua code
 
 				-- Special Lua Config, as recommended by neovim help docs
 				lua_ls = {
@@ -524,6 +526,8 @@ require("lazy").setup({
 			end,
 			formatters_by_ft = {
 				lua = { "stylua" },
+				java = { "google-java-format" },
+				go = { "gofumpt", "goimports" },
 				-- Conform can also run multiple formatters sequentially
 				-- python = { "isort", "black" },
 				--
@@ -706,6 +710,10 @@ require("lazy").setup({
 				"query",
 				"vim",
 				"vimdoc",
+				"go",
+				"gomod",
+				"gowork",
+				"gosum",
 			}
 			require("nvim-treesitter").install(parsers)
 			vim.api.nvim_create_autocmd("FileType", {
