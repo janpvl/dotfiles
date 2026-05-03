@@ -34,10 +34,16 @@ vim.pack.add({
 	{ src = "https://github.com/mfussenegger/nvim-dap" },
 	{ src = "https://github.com/nvim-java/nvim-java" },
 	{ src = "https://github.com/OXY2DEV/markview.nvim" },
+	{ src = "https://github.com/nvim-lua/plenary.nvim" },
+	{ src = "https://github.com/nvim-telescope/telescope.nvim" },
+	{ src = "https://github.com/nvim-telescope/telescope-ui-select.nvim" },
+	{ src = "https://github.com/nvim-tree/nvim-web-devicons" },
 })
 
 vim.cmd.colorscheme("gruvbox")
 vim.g.mapleader = " "
+
+vim.keymap.set("n", "<leader>o", "<cmd>so<CR>")
 
 -- lsp
 require("java").setup()
@@ -52,8 +58,7 @@ require("mason-tool-installer").setup({
 	},
 })
 
----- fix 'Undefined global vim' error in config file
-vim.lsp.config("lua_ls", {
+vim.lsp.config("lua_ls", { -- fix 'Undefined global vim' error in config file
 	settings = {
 		Lua = {
 			diagnostics = {
@@ -124,9 +129,32 @@ vim.api.nvim_set_hl(0, "MarkviewHeading3", { fg = "#48dbfb", bold = true })
 vim.api.nvim_set_hl(0, "MarkviewHeading4", { fg = "#1dd1a1", bold = true })
 vim.api.nvim_set_hl(0, "MarkviewHeading5", { fg = "#5f27cd", bold = true })
 vim.api.nvim_set_hl(0, "MarkviewHeading6", { fg = "#ff9ff3", bold = true })
-vim.api.nvim_set_hl(0, "@markup.list.checked.markdown", {
-	fg = "#a6e3a1",
+vim.api.nvim_set_hl(0, "MarkviewPalette1Fg", { link = "Normal" })
+vim.api.nvim_set_hl(0, "MarkviewListItemMinus", { link = "Normal" })  -- "-" Stichpunkte
+vim.api.nvim_set_hl(0, "MarkviewListItemPlus",  { link = "Normal" })  -- "+" Stichpunkte
+vim.api.nvim_set_hl(0, "MarkviewListItemStar",  { link = "Normal" })  -- "*" Stichpunkte
+
+-- telescope
+require("telescope").setup({
+	defaults = {
+		preview = { treesitter = true },
+		color_devicons = true,
+		sorting_strategy = "ascending",
+		path_displays = { "smart" },
+		layout_config = {
+			height = 0.6,
+			width = 0.8,
+			prompt_position = "top",
+			preview_cutoff = 40,
+		},
+	},
 })
-vim.api.nvim_set_hl(0, "@markup.list.unchecked.markdown", {
-	fg = "#f38ba8",
-})
+pcall(require("telescope").load_extension, "ui-select")
+pcall(require("telescope").load_extension, "nvim-web-devicons")
+
+local builtin = require("telescope.builtin")
+vim.keymap.set("n", "<leader>sg", builtin.live_grep, { desc = "Telescope live grep" })
+vim.keymap.set("n", "<leader>sf", builtin.find_files, { desc = "Telescope find files" })
+vim.keymap.set("n", "<leader>sk", builtin.keymaps, { desc = "[S]earch [K]eymaps" })
+vim.keymap.set("n", "<leader><leader>", builtin.buffers, { desc = "[ ] Find existing buffers" })
+vim.keymap.set("n", "<leader>sh", builtin.help_tags, { desc = "[S]earch [H]elp" })
