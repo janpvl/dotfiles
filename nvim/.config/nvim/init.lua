@@ -64,6 +64,7 @@ require("mason-tool-installer").setup({
 		"clangd",
 		"pyright",
 		"ruff",
+		"rust-analyzer",
 	},
 })
 
@@ -90,6 +91,16 @@ cmp.setup({
 			luasnip.lsp_expand(args.body)
 		end,
 	},
+	cmp.setup({
+
+		formatting = {
+			format = function(_, vim_item)
+				vim_item.abbr = string.sub(vim_item.abbr, 1, 30)
+				vim_item.menu = string.sub(vim_item.menu or "", 1, 20)
+				return vim_item
+			end,
+		},
+	}),
 
 	window = {
 		completion = cmp.config.window.bordered({
