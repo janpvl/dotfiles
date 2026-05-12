@@ -62,6 +62,8 @@ require("mason-tool-installer").setup({
 		"stylua",
 		"gopls",
 		"clangd",
+		"pyright",
+		"ruff",
 	},
 })
 
@@ -97,7 +99,7 @@ cmp.setup({
 	},
 
 	mapping = cmp.mapping.preset.insert({
-		["<CR>"] = cmp.mapping.confirm({ select = true }),
+		["<C-y>"] = cmp.mapping.confirm({ select = true }),
 
 		["<Tab>"] = cmp.mapping(function(fallback)
 			if cmp.visible() then
