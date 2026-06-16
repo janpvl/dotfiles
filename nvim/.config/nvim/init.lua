@@ -38,6 +38,13 @@ vim.pack.add({
 	{ src = "https://github.com/nvim-telescope/telescope.nvim" },
 	{ src = "https://github.com/nvim-telescope/telescope-ui-select.nvim" },
 	{ src = "https://github.com/nvim-tree/nvim-web-devicons" },
+	-- cmp
+	{ src = "https://github.com/hrsh7th/nvim-cmp" },
+	{ src = "https://github.com/hrsh7th/cmp-nvim-lsp" },
+	{ src = "https://github.com/hrsh7th/cmp-buffer" },
+	{ src = "https://github.com/hrsh7th/cmp-path" },
+	{ src = "https://github.com/saadparwaiz1/cmp_luasnip" },
+	{ src = "https://github.com/L3MON4D3/LuaSnip" },
 })
 
 vim.cmd.colorscheme("gruvbox")
@@ -55,10 +62,16 @@ require("mason-tool-installer").setup({
 		"stylua",
 		"gopls",
 		"clangd",
+		"pyright",
+		"ruff",
+		"rust-analyzer",
 	},
 })
 
-vim.lsp.config("lua_ls", { -- fix 'Undefined global vim' error in config file
+local capabilities = require("cmp_nvim_lsp").default_capabilities()
+
+vim.lsp.config("lua_ls", {
+	capabilities = capabilities,
 	settings = {
 		Lua = {
 			diagnostics = {
@@ -68,29 +81,78 @@ vim.lsp.config("lua_ls", { -- fix 'Undefined global vim' error in config file
 	},
 })
 
+-- cmp
+local cmp = require("cmp")
+local luasnip = require("luasnip")
+
+cmp.setup({
+	snippet = {
+		expand = function(args)
+			luasnip.lsp_expand(args.body)
+		end,
+	},
+	cmp.setup({
+
+		formatting = {
+			format = function(_, vim_item)
+				vim_item.abbr = string.sub(vim_item.abbr, 1, 30)
+				vim_item.menu = string.sub(vim_item.menu or "", 1, 20)
+				return vim_item
+			end,
+		},
+	}),
+
+	window = {
+		completion = cmp.config.window.bordered({
+			max_height = 10,
+		}),
+		documentation = cmp.config.window.bordered(),
+	},
+
+	mapping = cmp.mapping.preset.insert({
+		["<C-y>"] = cmp.mapping.confirm({ select = true }),
+
+		["<Tab>"] = cmp.mapping(function(fallback)
+			if cmp.visible() then
+				cmp.select_next_item()
+			elseif luasnip.expand_or_jumpable() then
+				luasnip.expand_or_jump()
+			else
+				fallback()
+			end
+		end, { "i", "s" }),
+
+		["<S-Tab>"] = cmp.mapping(function(fallback)
+			if cmp.visible() then
+				cmp.select_prev_item()
+			elseif luasnip.jumpable(-1) then
+				luasnip.jump(-1)
+			else
+				fallback()
+			end
+		end, { "i", "s" }),
+	}),
+
+	sources = cmp.config.sources({
+		{ name = "nvim_lsp" },
+		{ name = "luasnip" },
+		{ name = "path" },
+	}, {
+		{ name = "buffer" },
+	}),
+
+	experimental = {
+		ghost_text = true,
+	},
+})
+
 vim.keymap.set({ "n", "v", "x" }, "<leader>lf", vim.lsp.buf.format, { desc = "Format current buffer" })
 vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostic [Q]uickfix list" })
 vim.keymap.set("n", "grd", vim.lsp.buf.definition, {
 	desc = "[G]oto [D]efinition",
 })
 
-vim.api.nvim_create_autocmd("LspAttach", {
-	group = vim.api.nvim_create_augroup("my.lsp", {}),
-	callback = function(args)
-		local client = assert(vim.lsp.get_client_by_id(args.data.client_id))
-		if client:supports_method("textDocument/completion") then
-			-- Optional: trigger autocompletion on EVERY keypress. May be slow!
-			local chars = {}
-			for i = 32, 126 do
-				table.insert(chars, string.char(i))
-			end
-			client.server_capabilities.completionProvider.triggerCharacters = chars
-			vim.lsp.completion.enable(true, client.id, args.buf, { autotrigger = true })
-		end
-	end,
-})
-
-vim.cmd([[set completeopt+=menuone,noselect,popup]])
+vim.o.completeopt = "menu,menuone,noinsert"
 
 -- split window
 vim.keymap.set("n", "<C-h>", "<C-w><C-h>", { desc = "Move focus to the left window" })
@@ -130,9 +192,9 @@ vim.api.nvim_set_hl(0, "MarkviewHeading4", { fg = "#1dd1a1", bold = true })
 vim.api.nvim_set_hl(0, "MarkviewHeading5", { fg = "#5f27cd", bold = true })
 vim.api.nvim_set_hl(0, "MarkviewHeading6", { fg = "#ff9ff3", bold = true })
 vim.api.nvim_set_hl(0, "MarkviewPalette1Fg", { link = "Normal" })
-vim.api.nvim_set_hl(0, "MarkviewListItemMinus", { link = "Normal" })  -- "-" Stichpunkte
-vim.api.nvim_set_hl(0, "MarkviewListItemPlus",  { link = "Normal" })  -- "+" Stichpunkte
-vim.api.nvim_set_hl(0, "MarkviewListItemStar",  { link = "Normal" })  -- "*" Stichpunkte
+vim.api.nvim_set_hl(0, "MarkviewListItemMinus", { link = "Normal" })
+vim.api.nvim_set_hl(0, "MarkviewListItemPlus", { link = "Normal" })
+vim.api.nvim_set_hl(0, "MarkviewListItemStar", { link = "Normal" })
 
 -- telescope
 require("telescope").setup({
