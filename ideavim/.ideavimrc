@@ -1,0 +1,112 @@
+""" ===========================================================================
+"""  ~/.ideavimrc  -  portiert aus init.lua (Neovim)
+"""  Docs: https://jb.gg/ideavim-plugins  |  https://jb.gg/abva4t
+"""        https://github.com/JetBrains/ideavim/wiki/set-commands
+"""
+"""  WICHTIG: hinter :map / :Plug duerfen KEINE Kommentare stehen!
+"""  Sie wuerden Teil der rechten Seite werden. Kommentare immer eigene Zeile.
+""" ===========================================================================
+
+""" Leader --------------------------------------------------------------------
+let mapleader = " "
+
+""" Optionen (uebernommen, soweit von IdeaVim unterstuetzt) -------------------
+set number
+set relativenumber
+set scrolloff=10
+set ignorecase
+set smartcase
+set cursorline
+set list
+set incsearch
+set hlsearch
+set showmode
+set showcmd
+
+""" IdeaVim-spezifisch --------------------------------------------------------
+" J nutzt den smart join der IDE
+set ideajoin
+" beim Rename/Refactoring nicht in den Select-Mode springen
+set idearefactormode=keep
+set ideastatusicon=gray
+" Paste ueber die IDE (Auto-Import, Reformat)
+set clipboard+=ideaput
+" einschalten, um Action-IDs fuer neue Mappings zu finden:
+" set trackactionids
+
+""" Plugins -------------------------------------------------------------------
+" ersetzt den TextYankPost-Autocmd + vim.hl.on_yank
+Plug 'machakann/vim-highlightedyank'
+" ersetzt Comment.nvim  ->  gcc / gc{motion}
+Plug 'tpope/vim-commentary'
+" Oil-Ersatz: Vim-Keys im Project-Tool-Window
+Plug 'preservim/nerdtree'
+" <Tab>/<S-Tab> blaettern durch das Completion-Popup (wie in cmp)
+set youcompleteme
+
+let g:highlightedyank_highlight_duration = "200"
+
+""" Config neu laden  (war: <leader>o -> :so) ---------------------------------
+nnoremap <leader>o :source ~/.ideavimrc<CR>
+" Alternative: map <leader>o <Action>(IdeaVim.ReloadVimRc.reload)
+
+""" LSP / Code  (war: nvim-lspconfig, mason, nvim-java) ----------------------
+map <leader>lf <Action>(ReformatCode)
+map <leader>q <Action>(ActivateProblemsViewToolWindow)
+map grd <Action>(GotoDeclaration)
+
+" Bonus: die restlichen Neovim-0.11-Defaults
+map grn <Action>(RenameElement)
+map gra <Action>(ShowIntentionActions)
+map grr <Action>(FindUsages)
+map gri <Action>(GotoImplementation)
+map grt <Action>(GotoTypeDeclaration)
+map gO <Action>(FileStructurePopup)
+map K <Action>(ShowHoverInfo)
+map ]d <Action>(GotoNextError)
+map [d <Action>(GotoPreviousError)
+
+""" Splits (war: <C-hjkl>) ----------------------------------------------------
+nnoremap <C-h> <C-w>h
+nnoremap <C-l> <C-w>l
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+
+" Ctrl-Tasten an Vim statt an die IDE geben (nur Normal-/Visual-Mode)
+sethandler <C-h> n-v:vim i:ide
+sethandler <C-j> n-v:vim i:ide
+sethandler <C-k> n-v:vim i:ide
+sethandler <C-l> n-v:vim i:ide
+" Falls <C-w>-Kommandos nicht ankommen (kollidiert mit Extend Selection):
+" sethandler <C-w> n-v:vim i:ide
+
+""" Yank / System-Clipboard ---------------------------------------------------
+" Ohne das <CR> aus deiner nvim-Map braucht <leader>y ein Motion,
+" also <leader>yy fuer eine Zeile bzw. <leader>y im Visual-Mode.
+nnoremap <leader>y "+y
+xnoremap <leader>y "+y
+nnoremap <leader>d "+d
+xnoremap <leader>d "+d
+
+""" Highlights loeschen -------------------------------------------------------
+nnoremap <Esc> :nohlsearch<CR>
+
+""" Dateibaum (war: oil.nvim, <leader>e) --------------------------------------
+map <leader>e <Action>(SelectInProjectView)
+
+""" Telescope-Ersatz ----------------------------------------------------------
+" live_grep
+map <leader>sg <Action>(FindInPath)
+" find_files
+map <leader>sf <Action>(GotoFile)
+" keymaps
+map <leader>sk <Action>(GotoAction)
+" buffers
+map <leader><leader> <Action>(Switcher)
+" kein echtes help_tags-Pendant
+map <leader>sh <Action>(SearchEverywhere)
+
+""" Debugging (war: nvim-dap) - bei Bedarf einkommentieren --------------------
+" map <leader>b <Action>(ToggleLineBreakpoint)
+" map <leader>dc <Action>(Debug)
+" map <leader>ds <Action>(Stop)
