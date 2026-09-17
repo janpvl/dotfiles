@@ -1,22 +1,23 @@
 return {
   "stevearc/oil.nvim",
   dependencies = { "nvim-tree/nvim-web-devicons" },
-  lazy = false, -- nötig, damit oil netrw beim Öffnen von Ordnern ersetzt
+  lazy = false,
   opts = {
-    default_file_explorer = false,
-    view_options = { show_hidden = true },
-    keymaps = {
-      ["q"] = "actions.close",
+    default_file_explorer = true,
+    skip_confirm_for_simple_edits = true,
+    view_options = {
+      show_hidden = true,
     },
   },
   keys = {
-    { "<leader>e", "<cmd>Oil<cr>", desc = "Oil (Ordner der Datei)" },
+    { "-", "<cmd>Oil<cr>", desc = "Oil (Parent-Verzeichnis)" },
+    { "<leader>e", "<cmd>Oil<cr>", desc = "Explorer Oil (Datei-Verzeichnis)" },
     {
       "<leader>E",
       function()
-        require("oil").open(vim.uv.cwd())
+        require("oil").open(LazyVim.root())
       end,
-      desc = "Oil (cwd)",
+      desc = "Explorer Oil (root dir)",
     },
   },
 }
