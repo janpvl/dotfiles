@@ -8,3 +8,11 @@ font-feature = -liga
 font-feature = -calt
 font-size = 14
 theme = Gruvbox Dark
+
+window-padding-x = 5
+window-padding-y = 5
+window-padding-balance = true
+
+background-opacity = 0.95
+background-blur = true
+background-opacity-cells = true

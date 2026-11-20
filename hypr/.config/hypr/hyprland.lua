@@ -17,7 +17,7 @@ hl.monitor({
 
 -- check `hyprctl monitors`
 hl.monitor({
-	output = "DP-1",
+	output = "DP-2",
 	mode = "preferred",
 	position = "auto",
 	scale = 1,
@@ -44,14 +44,22 @@ hl.on("hyprland.start", function()
 	hl.exec_cmd("nm-applet")
 	hl.exec_cmd("hyprpaper")
 	hl.exec_cmd("hypridle")
+	hl.exec_cmd("emacs --daemon")
 end)
 
 -------------------------------
 ---- ENVIRONMENT VARIABLES ----
 -------------------------------
 
+hl.env("XCURSOR_THEME", "Adwaita")
 hl.env("XCURSOR_SIZE", "24")
 hl.env("HYPRCURSOR_SIZE", "24")
+
+hl.config({
+    cursor = {
+        no_hardware_cursors = false,
+    },
+})
 
 -----------------------
 ----- PERMISSIONS -----
@@ -255,9 +263,15 @@ for i = 1, 10 do
 	hl.bind(mainMod .. " + SHIFT + " .. key, hl.dsp.window.move({ workspace = i }))
 end
 
+-- emacs
+hl.bind("SUPER + E", hl.dsp.exec_cmd('emacsclient -c -a ""'))
+
+-- logout
+hl.bind("SUPER + SHIFT + L", hl.dsp.exec_cmd("uwsm stop"))
+
 -- Special workspace (scratchpad)
-hl.bind(mainMod .. " + S", hl.dsp.workspace.toggle_special("magic"))
-hl.bind(mainMod .. " + SHIFT + S", hl.dsp.window.move({ workspace = "special:magic" }))
+-- hl.bind(mainMod .. " + S", hl.dsp.workspace.toggle_special("magic"))
+-- hl.bind(mainMod .. " + SHIFT + S", hl.dsp.window.move({ workspace = "special:magic" }))
 
 -- Scroll through existing workspaces with mainMod + scroll
 hl.bind(mainMod .. " + mouse_down", hl.dsp.focus({ workspace = "e+1" }))
@@ -303,7 +317,15 @@ hl.bind("XF86AudioPrev", hl.dsp.exec_cmd("playerctl previous"), { locked = true 
 hl.bind("switch:Lid Switch", hl.dsp.exec_cmd("hyprlock"), { locked = true })
 
 -- Screenshot
-hl.bind("Print", hl.dsp.exec_cmd([[grim -g "$(slurp -d)" - | wl-copy -t image/png]]))
+-- hl.bind("Print", hl.dsp.exec_cmd([[grim -g "$(slurp -d)" - | wl-copy -t image/png]]))
+
+   -- for kdeconnect:
+   hl.bind("Print", hl.dsp.exec_cmd([[
+  file=$(mktemp --suffix=.png)
+  grim -g "$(slurp -d)" "$file" &&
+  wl-copy -t image/png < "$file" &&
+  kdeconnect-cli -d "62e07411_103c_4b83_bbce_fe52fe4a6c61" --share "$file"
+]]))
 
 -- Window fullscreen (entspricht fullscreen, 0)
 hl.bind(mainMod .. " + F", hl.dsp.window.fullscreen())
@@ -324,18 +346,18 @@ hl.bind(mainMod .. " + SPACE", hl.dsp.window.float({ action = "toggle" }))
 -- In deiner alten Config waren diese Regeln alle auskommentiert.
 -- Die beiden unteren sind aber empfehlenswert - einfach einkommentieren.
 
--- hl.window_rule({
---     name  = "float-kitty",
---     match = { class = "^(kitty)$", title = "^(kitty)$" },
---     float = true,
--- })
+hl.window_rule({
+    name  = "float-kitty",
+    match = { class = "^(kitty)$", title = "^(kitty)$" },
+    float = false,
+})
 
 -- Ignore maximize requests from apps. You'll probably like this.
--- hl.window_rule({
---     name  = "suppress-maximize-events",
---     match = { class = ".*" },
---     suppress_event = "maximize",
--- })
+hl.window_rule({
+    name  = "suppress-maximize-events",
+    match = { class = ".*" },
+    suppress_event = "maximize",
+})
 
 -- Fix some dragging issues with XWayland
 -- hl.window_rule({
